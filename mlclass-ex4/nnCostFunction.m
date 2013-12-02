@@ -62,25 +62,35 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+for i = 1:m
 
+  a1 = [1 X(i, :)];
 
+  z2 = Theta1 * a1';
+  a2 = [1 sigmoid(z2)'];
 
+  z3 = Theta2 * a2';
+  a3 = sigmoid(z3);
 
+  currY = y(i);
+  labels = 1:num_labels;
+  labels = labels == currY;
 
+  cost = sum(-labels .* log(a3') - (1 - labels) .* log(1 - a3'));
 
+  J = J + cost;
 
+endfor
 
+J = J / m;
 
+% regularization
 
+tempTheta1 = Theta1(:,2:end);
+tempTheta2 = Theta2(:,2:end);
+reg = (lambda/(2*m)) * (sum(sum(tempTheta1 .* tempTheta1)) + sum(sum(tempTheta2 .* tempTheta2)));
 
-
-
-
-
-
-
-
-% -------------------------------------------------------------
+J = J + reg;
 
 % =========================================================================
 
