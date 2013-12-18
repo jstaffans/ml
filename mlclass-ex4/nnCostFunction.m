@@ -92,6 +92,36 @@ reg = (lambda/(2*m)) * (sum(sum(tempTheta1 .* tempTheta1)) + sum(sum(tempTheta2 
 
 J = J + reg;
 
+
+yk = zeros(num_labels, m); 
+for i=1:m,
+  yk(y(i),i)=1;
+end
+
+% backprop
+
+for t = 1:m,
+  a1 = [1 X(t,:)];
+  z2 = Theta1 * a1';
+
+  a2 = sigmoid(z2);
+  a2 = [1 ; a2]; % add bias
+
+  z3 = Theta2 * a2;
+
+  a3 = sigmoid(z3); % final activation layer a3 == h(theta)
+
+  z2 = [1; z2];
+  delta_3 = a3 - yk(:, t);
+  delta_2 = (Theta2' * delta_3) .* sigmoidGradient(z2);
+
+  delta_2 = delta_2(2:end);
+
+  Theta2_grad = Theta2_grad + delta_3 * a2';
+  Theta1_grad = Theta1_grad + delta_2 * a1;
+
+end
+
 % =========================================================================
 
 % Unroll gradients
